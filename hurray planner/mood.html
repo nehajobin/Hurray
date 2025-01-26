@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Tracker</title>
+  <link rel="stylesheet" href="mood.css">
+</head>
+<body>
+  <div class="container">
+    <h1>How Are You Feeling Today?</h1>
+    
+    <!-- Mood Selection -->
+    <div class="mood-selection">
+      <button class="mood-btn" id="happy" onclick="setMood('happy')">😊</button>
+      <button class="mood-btn" id="sad" onclick="setMood('sad')">😞</button>
+      <button class="mood-btn" id="angry" onclick="setMood('angry')">😡</button>
+      <button class="mood-btn" id="excited" onclick="setMood('excited')">😃</button>
+      <button class="mood-btn" id="surprised" onclick="setMood('surprised')">😲</button>
+    </div>
+    
+    <!-- Encouraging Message -->
+    <div id="encouragement-message" class="encouragement-message"></div>
+  </div>
+
+  <script src="mood.js"></script>
+</body>
+</html>
+
+       

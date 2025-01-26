@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Tracker</title>
+  <style>
+    /* General Body Styling */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #00bcd4, #8e44ad);
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    h1 {
+      color: #ffffff;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Water Goal Section */
+    .water-goal-container {
+      margin: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 300px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .water-goal-container input {
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      border: 2px solid #00796b;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .water-goal-container button {
+      padding: 10px 20px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    .water-goal-container button:hover {
+      background-color: #004d40;
+    }
+
+    /* Water Bottle Container */
+    .bottle-container {
+      position: relative;
+      width: 150px;
+      height: 400px;
+      border: 5px solid #00796b;
+      border-radius: 20px;
+      background-color: #ffffff;
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .water-level {
+      width: 100%;
+      height: 0;
+      background-color: #00796b;
+      position: absolute;
+      bottom: 0;
+      transition: height 0.3s ease-in-out;
+    }
+
+    /* Button Styling for Drinking Water */
+    #drinkWaterBtn {
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      background-color: #ffeb3b;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: bold;
+      width: 200px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s, transform 0.3s ease;
+    }
+
+    #drinkWaterBtn:hover {
+      background-color: #fbc02d;
+      transform: scale(1.05);
+    }
+
+    #drinkWaterBtn:disabled {
+      background-color: #c1c1c1;
+      cursor: not-allowed;
+    }
+
+    /* Encouragement and Celebration Message */
+    .encouragement {
+      color: #00796b;
+      font-size: 18px;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .celebration-message {
+      display: none;
+      font-size: 24px;
+      color: #ffeb3b;
+      font-weight: bold;
+      margin-top: 20px;
+      text-transform: uppercase;
+      animation: celebrateAnimation 1s ease-in-out;
+    }
+
+    @keyframes celebrateAnimation {
+      0% {
+        transform: scale(1);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    button:disabled {
+      background-color: #c1c1c1;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Water Tracker</h1>
+
+  <!-- Water Goal Input Section -->
+  <div class="water-goal-container">
+    <label for="waterGoalInput">Set your daily water goal (in cups):</label>
+    <input type="number" id="waterGoalInput" placeholder="e.g., 8" min="1">
+    <button id="setGoalBtn">Set Goal</button>
+  </div>
+
+  <!-- Water Bottle Visualization -->
+  <div class="bottle-container">
+    <div id="waterLevel" class="water-level"></div>
+  </div>
+
+  <!-- Button to Track Water Consumption -->
+  <button id="drinkWaterBtn" disabled>I've Drunk Water</button>
+
+  <!-- Encouragement Message -->
+  <div class="encouragement" id="encouragementMessage"></div>
+
+  <!-- Celebration Message for Reaching Goal -->
+  <div class="celebration-message" id="celebrationMessage">🎉 Congratulations! You've reached your daily water goal! 🎉</div>
+
+  <script>
+    let waterGoal = 0;
+    let waterConsumed = 0;
+    let encouragementMessages = [
+      "Looks like you haven't had any water yet. Let's get started!",
+      "Hmm, you're progressing! Keep it up!",
+      "You're doing great, keep it going!",
+      "Almost there, you're so close to your goal!",
+      "Well done! You're staying hydrated!"
+    ];
+
+    // Set daily water goal
+    document.getElementById('setGoalBtn').addEventListener('click', function() {
+      waterGoal = parseInt(document.getElementById('waterGoalInput').value);
+      if (waterGoal > 0) {
+        document.getElementById('drinkWaterBtn').disabled = false;
+        document.getElementById('encouragementMessage').textContent = encouragementMessages[0]; // Initial message
+        document.getElementById('waterGoalInput').disabled = true;
+        document.getElementById('setGoalBtn').disabled = true;
+      } else {
+        alert('Please enter a valid goal.');
+      }
+    });
+
+    // Drink water and update the bottle level
+    document.getElementById('drinkWaterBtn').addEventListener('click', function() {
+      if (waterConsumed < waterGoal) {
+        waterConsumed++;
+        updateWaterLevel();
+        provideEncouragement();
+      }
+      if (waterConsumed >= waterGoal) {
+        document.getElementById('celebrationMessage').style.display = 'block';
+        document.getElementById('encouragementMessage').textContent = "You've completed your water goal!";
+        const celebrationSound = new Audio('https://www.soundjay.com/button/beep-07.wav');
+        celebrationSound.play();
+      }
+    });
+
+    // Update the water level in the bottle
+    function updateWaterLevel() {
+      const waterPercentage = (waterConsumed / waterGoal) * 100;
+      document.getElementById('waterLevel').style.height = waterPercentage + '%';
+    }
+
+    // Provide encouragement message based on water consumption
+    function provideEncouragement() {
+      let encouragementText = encouragementMessages[waterConsumed] || encouragementMessages[encouragementMessages.length - 1];
+      document.getElementById('encouragementMessage').textContent = encouragementText;
+    }
+  </script>
+
+</body>
+</html>

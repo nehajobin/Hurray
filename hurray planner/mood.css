@@ -1,0 +1,74 @@
+/* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .container {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Mood Buttons */
+  .mood-selection {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .mood-btn {
+    background-color: #ffeb3b;
+    border: none;
+    border-radius: 50%;
+    padding: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s;
+  }
+  
+  .mood-btn:hover {
+    transform: scale(1.2);
+    background-color: #ffd54f;
+  }
+  
+  .mood-btn:active {
+    transform: scale(1);
+  }
+  
+  /* Encouragement Message */
+  .encouragement-message {
+    font-size: 24px;
+    font-weight: 500;
+    color: #4caf50;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e8f5e9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  
+  .encouragement-message.show {
+    opacity: 1;
+  }
+  

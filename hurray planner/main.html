@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Hurray Planner</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Full page styling */
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffecd2 10%, #fcb69f 100%);
+      animation: gradientAnimation 5s ease-in-out infinite;
+    }
+
+    /* Animation for the background */
+    @keyframes gradientAnimation {
+      0% { background: linear-gradient(135deg, #2198ed 10%, #fcb69f 100%); }
+      50% { background: linear-gradient(135deg, #ffb6b9 10%, #fae1dc 100%); }
+      100% { background: linear-gradient(135deg, #7ad708 10%, #fcb69f 100%); }
+    }
+
+    /* Container for the landing page content */
+    .landing-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative; /* Fix for possible overlap issues */
+      text-align: center;
+      z-index: 10; /* Ensure it's on top of other elements */
+    }
+
+    /* Flower container */
+    .flower-container {
+      margin: 20px auto;
+      display: inline-block;
+      position: relative;
+      z-index: 1; /* Ensure it's below the text */
+    }
+
+    .flower {
+      width: 60px;
+      height: 60px;
+      background-color: #f79c42;
+      border-radius: 50%;
+      animation: rotateFlower 4s infinite linear;
+    }
+
+    @keyframes rotateFlower {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Fade-in effect for text */
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Button styling */
+    .get-started-btn {
+      margin-top: 20px;
+      z-index: 5; /* Ensure button is above other elements */
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background-color: #f79c42;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffbb33;
+    }
+  </style>
+</head>
+<body>
+  <!-- Landing page content -->
+  <div class="landing-page" id="landing-page">
+    <h1>Welcome to Hurray Planner!</h1>
+
+    <!-- Flower Animation -->
+    <div class="flower-container">
+      <div class="flower"></div>
+    </div>
+
+    <!-- Get Started Button -->
+    <div class="get-started-btn">
+      <button id="get-started" onclick="location.href='landing.html'">Start Planning</button>
+    </div>
+  </div>
+
+  <script>
+    // Auto redirect after 3 seconds to the main planner page (change 'planner.html' to your actual main page URL)
+    setTimeout(function() {
+      window.location.href = 'landing.html'; // Main app page (change this if your main page is different)
+    }, 3000);

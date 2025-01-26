@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hurray Planner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+      color: rgb(151, 219, 145);
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    header {
+      margin-bottom: 20px;
+    }
+
+    #current-date {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    .task-container {
+      margin: 20px 0;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .task-list {
+      width: 50%;
+      margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      height: 200px;
+      overflow-y: scroll;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .task-item.selected {
+      background-color: #d1e7dd;
+    }
+
+    .task-text {
+      flex: 1;
+      padding-left: 10px;
+    }
+
+    .tick-bar {
+      width: 100px;
+      height: 6px;
+      background-color: #eee;
+      margin-left: 10px;
+      border-radius: 3px;
+    }
+
+    .tick-bar-progress {
+      height: 100%;
+      background-color: #4CAF50;
+      width: 0;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    .flower-canvas {
+      position: relative;
+      width: 350px;
+      height: 350px;
+      margin: 20px auto;
+      background-color: rgb(107, 247, 102);
+      border-radius: 50%;
+      border: 3px solid #4CAF50;
+      transform-style: preserve-3d;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .flower-canvas.rotating {
+      animation: rotateFlower 5s linear infinite;
+    }
+
+    @keyframes rotateFlower {
+      from {
+        transform: rotateZ(0deg);
+      }
+      to {
+        transform: rotateZ(360deg);
+      }
+    }
+
+    .flower-center {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      background-color: yellow;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .flower-petal {
+      position: absolute;
+      width: 100px; /* Increased size */
+      height: 140px; /* Increased size */
+      background-color: rgb(255, 84, 112);
+      clip-path: polygon(50% 0%, 60% 40%, 50% 100%, 40% 40%);
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 100%;
+      transform: translate(-50%, -100%) rotate(0deg);
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .completed {
+      opacity: 1;
+    }
+
+    .celebration {
+      display: none;
+      font-size: 24px;
+      color: #ff6347;
+      font-weight: bold;
+      margin-top: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Title & Date -->
+  <header>
+    <h1>Welcome to Your Planner</h1>
+    <p id="current-date"></p>
+  </header>
+
+  <!-- Task Input Section -->
+  <div class="task-container">
+    <h2>Your Tasks</h2>
+    <form id="task-form">
+      <input type="text" id="taskInput" placeholder="Enter your task..." required>
+      <button type="submit" id="add-task-btn">Add Task</button>
+    </form>
+    <div class="task-list" id="taskList"></div>
+
+    <!-- Task Progress -->
+    <div id="task-progress">
+      <div id="progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Flower Canvas -->
+  <div class="flower-canvas" id="flowerCanvas">
+    <div class="flower-center"></div>
+  </div>
+
+  <!-- Completion Message -->
+  <div id="message"></div>
+
+  <!-- Celebration -->
+  <div class="celebration" id="celebrationMessage">
+    🎉 Congratulations! All tasks are done! 🎉
+  </div>
+
+  <!-- Happy Sound -->
+  <audio id="happySound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+
+  <script>
+    let tasks = [];
+    let completedTasks = 0;
+    let totalTasks = 0;
+    const petals = [];
+    const maxPetals = 8; // Total number of petals
+
+    // Add Task Function
+    document.getElementById('task-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const taskInput = document.getElementById('taskInput');
+      const taskText = taskInput.value.trim();
+      if (taskText) {
+        tasks.push({ text: taskText, completed: false });
+        totalTasks++; // Keep track of all tasks ever added
+        taskInput.value = '';
+        renderTaskList();
+        createPetalsIfNeeded();
+      } else {
+        alert('Task cannot be empty!');
+      }
+    });
+
+    // Render Task List
+    function renderTaskList() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = ''; // Clear the list first
+      tasks.forEach((task, index) => {
+        const taskElement = document.createElement('div');
+        taskElement.classList.add('task-item');
+        taskElement.dataset.index = index;
+
+        // Create a checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => toggleTaskCompletion(index));
+
+        // Add task text
+        const taskText = document.createElement('span');
+        taskText.classList.add('task-text');
+        taskText.textContent = task.text;
+
+        // Add tick bar progress
+        const tickBar = document.createElement('div');
+        tickBar.classList.add('tick-bar');
+        const tickBarProgress = document.createElement('div');
+        tickBarProgress.classList.add('tick-bar-progress');
+        tickBar.appendChild(tickBarProgress);
+
+        // Append everything to the task item
+        taskElement.appendChild(checkbox);
+        taskElement.appendChild(taskText);
+        taskElement.appendChild(tickBar);
+        taskList.appendChild(taskElement);
+      });
+    }
+
+    // Toggle task completion
+    function toggleTaskCompletion(index) {
+      tasks[index].completed = !tasks[index].completed;
+      renderTaskList(); // Re-render task list to reflect changes
+      bloomFlower(); // Update flower blooming status
+    }
+
+    // Create Petals for the Flower
+    function createPetalsIfNeeded() {
+      if (petals.length < maxPetals) {
+        const flowerCanvas = document.getElementById('flowerCanvas');
+        const angleStep = 360 / maxPetals;
+
+        while (petals.length < maxPetals) {
+          const angle = petals.length * angleStep;
+          const petal = document.createElement('div');
+          petal.classList.add('flower-petal');
+          petal.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+          flowerCanvas.appendChild(petal);
+          petals.push(petal);
+        }
+      }
+    }
+
+    // Bloom the Flower Proportionally
+    function bloomFlower() {
+      const petalsToBloom = Math.ceil(
+        (tasks.filter(task => task.completed).length / totalTasks) * maxPetals
+      );
+      petals.forEach((petal, index) => {
+        if (index < petalsToBloom) {
+          petal.classList.add('completed');
+        }
+      });
+
+      // Update task completion progress
+      const taskItems = document.querySelectorAll('.task-item');
+      taskItems.forEach((item, index) => {
+        const tickBarProgress = item.querySelector('.tick-bar-progress');
+        if (tasks[index].completed) {
+          tickBarProgress.style.width = '100%';
+        } else {
+          tickBarProgress.style.width = '0%';
+        }
+      });
+
+      // Check if all tasks are completed
+      if (tasks.every(task => task.completed)) {
+        document.getElementById('message').textContent = 'All petals have bloomed! Great job completing your tasks!';
+        document.getElementById('flowerCanvas').classList.add('rotating');
+        document.getElementById('celebrationMessage').style.display = 'block';
+        
+        // Play the happy sound when all tasks are completed
+        const happySound = document.getElementById('happySound');
+        happySound.play();
+      }
+    }
+  </script>
+
+</body>
+</html>
