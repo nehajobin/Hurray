@@ -1,31 +1,31 @@
-# [Project Name] 🎯
+# hurray day planner 🎯
 
 
-## Basic Details
-### Team Name: [Name]
+## basic details
+### Team Name: hurray
 
 
 ### Team Members
-- Member 1: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+- Member 1: neha jobin-lbsitw poojapura
+- Member 2: deborah thomas - lbsitw poojapura
+- Member 3: asna mary allen - lbsitw poojapura
 
 ### Hosted Project Link
-[mention your project hosted project link here]
+https://hurray-one.vercel.app/
 
 ### Project Description
-[2-3 lines about what your project does]
+day planning app with additional feauters to understand your mood and motivate you.also have an option to understand how much water drink during a day
 
 ### The Problem statement
-[What ridiculous problem are you solving?]
+motivates a person to achieve his goal by keeping his laziness away
 
 ### The Solution
-[How are you solving it? Keep it fun!]
+developed an app with amzing feauters like each time when the person finishes a task there is flower on which petals are added .which helps the person to stay motivated and complete his daily tasks
 
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [Languages used]
+- html
 - [Frameworks used]
 - [Libraries used]
 - [Tools used]
